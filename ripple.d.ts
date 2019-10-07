@@ -1,5 +1,5 @@
-import { ContentView } from 'tns-core-modules/ui/content-view';
-import { Property } from 'tns-core-modules/ui/core/dependency-observable';
+import { ContentView } from "tns-core-modules/ui/content-view";
+import { Property } from "tns-core-modules/ui/core/dependency-observable";
 
 /**
  * Represents the Ripple layout.

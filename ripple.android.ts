@@ -7,8 +7,8 @@
  *************************************************************************************/
 /// <reference path="./node_modules/tns-platform-declarations/android.d.ts" />
 
-import { Color } from 'tns-core-modules/color';
-import * as common from './ripple-common';
+import { Color } from "tns-core-modules/color";
+import * as common from "./ripple-common";
 import {
   fadeDurationProperty,
   rippleAlphaProperty,
@@ -16,7 +16,7 @@ import {
   rippleColorProperty,
   rippleDelayClickProperty,
   rippleDurationProperty
-} from './ripple-common';
+} from "./ripple-common";
 
 declare var com: any;
 
@@ -53,10 +53,13 @@ export class Ripple extends common.Ripple {
   }
 
   public createNativeView() {
-    this._android = new com.balysv.materialripple.MaterialRippleLayout(this._context);
+    this._android = new com.balysv.materialripple.MaterialRippleLayout(
+      this._context
+    );
     this._android.setRippleOverlay(true);
 
-    if (!this._androidViewId) this._androidViewId = android.view.View.generateViewId();
+    if (!this._androidViewId)
+      this._androidViewId = android.view.View.generateViewId();
     this._android.setId(this._androidViewId);
 
     return this._android;

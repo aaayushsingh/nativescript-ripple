@@ -7,9 +7,12 @@
  *************************************************************************************/
 /// <reference path="./node_modules/tns-platform-declarations/ios.d.ts" />
 
-import { Color } from 'tns-core-modules/color';
-import { GestureTypes, TouchGestureEventData } from 'tns-core-modules/ui/gestures';
-import * as common from './ripple-common';
+import { Color } from "tns-core-modules/color";
+import {
+  GestureTypes,
+  TouchGestureEventData
+} from "tns-core-modules/ui/gestures";
+import * as common from "./ripple-common";
 
 /**
  * Native delegate class that can be used to get animation callbacks in the Javascript context
@@ -98,12 +101,16 @@ export class Ripple extends common.Ripple {
    * @param y
    * @param action
    */
-  updateRipple(x: number, y: number, action: 'up' | 'down' | 'move' | 'cancel') {
-    if (action === 'down') {
+  updateRipple(
+    x: number,
+    y: number,
+    action: "up" | "down" | "move" | "cancel"
+  ) {
+    if (action === "down") {
       this.startRipple(x, y);
-    } else if (action === 'move' && this.ripple) {
+    } else if (action === "move" && this.ripple) {
       this.moveRipple(x, y);
-    } else if (action === 'up') {
+    } else if (action === "up") {
       this.finishRipple();
     }
   }
@@ -118,14 +125,23 @@ export class Ripple extends common.Ripple {
     const size = this.getActualSize();
     const longestSide = Math.max(size.height, size.width);
     const initialRadius = longestSide * 2.5;
-    this.ripple = UIView.alloc().initWithFrame(CGRectMake(0, 0, initialRadius, initialRadius));
+    this.ripple = UIView.alloc().initWithFrame(
+      CGRectMake(0, 0, initialRadius, initialRadius)
+    );
     this.rippleIsFullyExtended = false;
     this.ripple.layer.cornerRadius = initialRadius * 0.5;
     this.ripple.backgroundColor = new Color(
-      this.rippleColor ? ((this.rippleColor as unknown) as Color).hex : '#cecece'
+      this.rippleColor
+        ? ((this.rippleColor as unknown) as Color).hex
+        : "#cecece"
     ).ios;
     this.ripple.alpha = 0.5;
-    this.ripple.layer.transform = CATransform3DScale(CATransform3DIdentity, 0.1, 0.1, 0);
+    this.ripple.layer.transform = CATransform3DScale(
+      CATransform3DIdentity,
+      0.1,
+      0.1,
+      0
+    );
     nativeView.insertSubviewAtIndex(this.ripple, 1);
     this.ripple.center = CGPointMake(x || 0, y || 0);
   }
@@ -168,8 +184,10 @@ export class Ripple extends common.Ripple {
       const presentationLayer = this.ripple.layer.presentationLayer();
       // app crashed because presentationLayer was undefined
       // check if presentationLayer exixts before accessing
-      if(presentationLayer !==null){
-        const currentScale = presentationLayer.valueForKeyPath('transform.scale');
+      if (presentationLayer !== null) {
+        const currentScale = presentationLayer.valueForKeyPath(
+          "transform.scale"
+        );
         this.cancelScaleRippleAnimation();
 
         const currentRipple = this.ripple;
@@ -203,24 +221,33 @@ export class Ripple extends common.Ripple {
     animationDidStopFinishedCallback = (anim, flag) => {},
     animationDidStartCallback = anim => {}
   ) {
-    const scaleAnimation: CABasicAnimation = CABasicAnimation.animationWithKeyPath('transform.scale');
+    const scaleAnimation: CABasicAnimation = CABasicAnimation.animationWithKeyPath(
+      "transform.scale"
+    );
     scaleAnimation.fromValue = fromScale;
     scaleAnimation.toValue = toScale;
-    scaleAnimation.timingFunction = CAMediaTimingFunction.functionWithName(kCAMediaTimingFunctionEaseOut);
+    scaleAnimation.timingFunction = CAMediaTimingFunction.functionWithName(
+      kCAMediaTimingFunctionEaseOut
+    );
     scaleAnimation.duration = duration;
     scaleAnimation.delegate = new AnimationDelegate().initWithCallbacks(
       animationDidStartCallback,
       animationDidStopFinishedCallback
     );
-    this.ripple.layer.transform = CATransform3DScale(CATransform3DIdentity, toScale, toScale, 0);
-    this.ripple.layer.addAnimationForKey(scaleAnimation, 'scale');
+    this.ripple.layer.transform = CATransform3DScale(
+      CATransform3DIdentity,
+      toScale,
+      toScale,
+      0
+    );
+    this.ripple.layer.addAnimationForKey(scaleAnimation, "scale");
   }
 
   /**
    * Cancel the current ripple scale animation
    */
   cancelScaleRippleAnimation() {
-    this.ripple.layer.removeAnimationForKey('scale');
+    this.ripple.layer.removeAnimationForKey("scale");
   }
 
   /**
@@ -239,26 +266,30 @@ export class Ripple extends common.Ripple {
     animationDidStopFinishedCallback = (anim, flag) => {},
     animationDidStartCallback = anim => {}
   ) {
-    const fadeAnimation: CABasicAnimation = CABasicAnimation.animationWithKeyPath('opacity');
+    const fadeAnimation: CABasicAnimation = CABasicAnimation.animationWithKeyPath(
+      "opacity"
+    );
     fadeAnimation.fromValue = fromAlpha;
     fadeAnimation.toValue = toAlpha;
     if (delay > 0) {
       fadeAnimation.beginTime = CACurrentMediaTime() + delay;
     }
-    fadeAnimation.timingFunction = CAMediaTimingFunction.functionWithName(kCAMediaTimingFunctionEaseOut);
+    fadeAnimation.timingFunction = CAMediaTimingFunction.functionWithName(
+      kCAMediaTimingFunctionEaseOut
+    );
     fadeAnimation.duration = duration;
     const ripple = this.ripple;
     fadeAnimation.delegate = new AnimationDelegate().initWithCallbacks(anim => {
       ripple.layer.opacity = 0;
     }, animationDidStopFinishedCallback);
-    this.ripple.layer.addAnimationForKey(fadeAnimation, 'fade');
+    this.ripple.layer.addAnimationForKey(fadeAnimation, "fade");
   }
 
   /**
    * Cancel the current ripple fade animation
    */
   cancelFadeRippleAnimation() {
-    this.ripple.layer.removeAnimationForKey('fade');
+    this.ripple.layer.removeAnimationForKey("fade");
   }
 
   private tapFn: (args: TouchGestureEventData) => void;
