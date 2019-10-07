@@ -166,22 +166,25 @@ export class Ripple extends common.Ripple {
   finishRipple() {
     if (this.ripple) {
       const presentationLayer = this.ripple.layer.presentationLayer();
-      const currentScale = presentationLayer.valueForKeyPath('transform.scale');
-      this.cancelScaleRippleAnimation();
+      // app crashed because presentationLayer was undefined
+      // check if presentationLayer exixts before accessing
+      if(presentationLayer !==null){
+        const currentScale = presentationLayer.valueForKeyPath('transform.scale');
+        this.cancelScaleRippleAnimation();
 
-      const currentRipple = this.ripple;
-      if (!this.rippleIsFullyExtended) {
-        this.animateScaleRipple(currentScale, 1, 0.5);
-        this.animateFadeRipple(0.5, 0, 0.5, 0.2, (anim, flag) => {
-          currentRipple.removeFromSuperview();
-        });
-      } else {
-        this.animateFadeRipple(0.5, 0, 0.5, 0, (anim, flag) => {
-          currentRipple.removeFromSuperview();
-        });
+        const currentRipple = this.ripple;
+        if (!this.rippleIsFullyExtended) {
+          this.animateScaleRipple(currentScale, 1, 0.5);
+          this.animateFadeRipple(0.5, 0, 0.5, 0.2, (anim, flag) => {
+            currentRipple.removeFromSuperview();
+          });
+        } else {
+          this.animateFadeRipple(0.5, 0, 0.5, 0, (anim, flag) => {
+            currentRipple.removeFromSuperview();
+          });
+        }
+        this.ripple = null;
       }
-
-      this.ripple = null;
     }
   }
 
